@@ -61,13 +61,14 @@ jobs:
 
       - name: Restore Database from .bak
         run: |
-          # Subir el archivo .bak a un contenedor de Azure Blob Storage
+          # Subir el archivo .bak a un contenedor de Azure Blob Storage (sobrescribiendo si ya existe)
           az storage blob upload \
             --account-name cuentaalmacenamiento3 \
             --container-name backups \
             --file AdventureWorksLT2016.bak \
             --name AdventureWorksLT2016.bak \
-            --account-key ${{ secrets.AZURE_STORAGE_KEY }}
+            --account-key ${{ secrets.AZURE_STORAGE_KEY }} \
+            --overwrite true
       
           # Restaurar la base de datos desde el archivo .bak
           az sql db restore \
@@ -79,3 +80,4 @@ jobs:
             --source-database adventureworkslt-db-jerson \
             --blob-url https://cuentaalmacenamiento3.blob.core.windows.net/backups/AdventureWorksLT2016.bak \
             --dest-name adventureworkslt-db-jerson
+      
