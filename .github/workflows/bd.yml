@@ -47,14 +47,7 @@ jobs:
 
       - name: Terraform Apply
         run: |
-          terraform apply -auto-approve \
-            -var="resource_group_name=lab03-sql-rg-jerson" \
-            -var="location=brazilsouth" \
-            -var="sql_server_name=sql-srv-jerson-lab03" \
-            -var="admin_username=sqladmin" \
-            -var="admin_password=${{ secrets.SQL_ADMIN_PASSWORD }}" \
-            -var="database_name=adventureworkslt-db-jerson" \
-            -refresh=false
+          run: terraform apply -auto-approve
         working-directory: infra
 
       - name: Add GitHub Actions IP to Azure SQL Firewall
