@@ -59,14 +59,13 @@ jobs:
             --start-ip-address 0.0.0.0 \
             --end-ip-address 0.0.0.0
 
-      - name: Install sqlcmd
-        run: |
+            - name: Install sqlcmd
+            run: |
               curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
               curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
               sudo apt-get update
               sudo apt-get install -y mssql-tools unixodbc-dev
-              # Asegurarse de que sqlcmd esté en el PATH para la sesión actual
-              export PATH="$PATH:/opt/mssql-tools/bin"
+              # Asegúrate de agregar sqlcmd al PATH en la sesión actual
               echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
               source ~/.bashrc
           
