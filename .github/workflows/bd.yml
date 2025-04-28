@@ -3,17 +3,22 @@ name: Deploy Azure SQL Database
 on:
   push:
     branches:
-      - main  # o la rama donde trabajes
+      - main
 
 jobs:
   deploy-db:
     runs-on: ubuntu-latest
-    container: 
-      image: mcr.microsoft.com/mssql-tools  # Usa la imagen oficial que trae sqlcmd
 
     steps:
     - name: Checkout repo
       uses: actions/checkout@v4
+
+    - name: Install sqlcmd (official way)
+      run: |
+        curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+        curl -sSL https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
+        sudo apt-get update
+        sudo ACCEPT_EULA=Y apt-get install -y mssql-tools unixodbc-dev
 
     - name: Run SQL Script to Create AdventureWorksLT
       env:
@@ -22,4 +27,4 @@ jobs:
         SQL_USER: "sqladmin"
         SQL_PASSWORD: "P@ssw0rd1234!"
       run: |
-        sqlcmd -S $SQL_SERVER -d $SQL_DATABASE -U $SQL_USER -P $SQL_PASSWORD -i bd.sql
+        /opt/mssql-tools/bin/sqlcmd -S $SQL_SERVER -d $SQL_DATABASE -U $SQL_USER -P $SQL_PASSWORD -i bd.sql
