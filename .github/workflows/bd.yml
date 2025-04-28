@@ -68,7 +68,7 @@ jobs:
             --file AdventureWorksLT2016.bak \
             --name AdventureWorksLT2016.bak \
             --account-key ${{ secrets.AZURE_STORAGE_KEY }}
-
+      
           # Restaurar la base de datos desde el archivo .bak
           az sql db restore \
             --resource-group lab03-sql-rg-jerson \
@@ -77,4 +77,5 @@ jobs:
             --backup-storage-redundancy LRS \
             --name AdventureWorksLT2016 \
             --source-database adventureworkslt-db-jerson \
-            --blob-url https://cuentaalmacenamiento3.blob.core.windows.net/backups/AdventureWorksLT2016.bak
+            --blob-url https://cuentaalmacenamiento3.blob.core.windows.net/backups/AdventureWorksLT2016.bak \
+            --dest-name adventureworkslt-db-jerson
