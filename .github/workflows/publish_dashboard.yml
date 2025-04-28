@@ -2,8 +2,6 @@ name: Deploy Power BI Dashboard
 
 on:
   push:
-    paths:
-      - 'lab03_chambi.pbix'
     branches:
       - main
 
@@ -20,13 +18,13 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Deploy .pbix to Power BI
-      uses: microsoft/powerbi-actions@v1
-      with:
-        authenticationType: 'ServicePrincipal'
-        clientId: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}
-        clientSecret: ${{ fromJson(secrets.AZURE_CREDENTIALS).clientSecret }}
-        tenantId: ${{ fromJson(secrets.AZURE_CREDENTIALS).tenantId }}
-        workspaceId: ${{ secrets.PBI_WORKSPACE_ID }}
-        importName: 'lab03-JersonChambi'
-        pbixPath: 'lab03_chambi.pbix'
+    - name: Install Azure CLI
+      run: |
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+    - name: Upload PBIX via API
+      run: |
+        curl -X POST "https://api.powerbi.com/v1.0/myorg/groups/${{ secrets.PBI_WORKSPACE_ID }}/imports?datasetDisplayName=lab03-Jersonchambi" \
+          -H "Authorization: Bearer $(az account get-access-token --resource https://analysis.windows.net/powerbi/api --query accessToken -o tsv)" \
+          -H "Content-Type: multipart/form-data" \
+          -F "file=@lab03_chambi.pbix"
