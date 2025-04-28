@@ -47,7 +47,7 @@ jobs:
 
       - name: Terraform Apply
         run: |
-          run: terraform apply -auto-approve
+          terraform apply -auto-approve
         working-directory: infra
 
       - name: Add GitHub Actions IP to Azure SQL Firewall
