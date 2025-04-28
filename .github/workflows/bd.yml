@@ -63,8 +63,8 @@ jobs:
         run: |
           # Subir el archivo .bak a un contenedor de Azure Blob Storage
           az storage blob upload \
-            --account-name <storage-account-name> \
-            --container-name <container-name> \
+            --account-name <cuentaalmacenamiento3> \
+            --container-name <backups> \
             --file AdventureWorksLT2016.bak \
             --name AdventureWorksLT2016.bak
 
