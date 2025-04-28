@@ -1,0 +1,30 @@
+name: Deploy Azure SQL Database
+
+on:
+  push:
+    branches:
+      - main  # o la rama donde trabajes
+
+jobs:
+  deploy-db:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v4
+
+    - name: Install sqlcmd
+      run: |
+        sudo apt-get update
+        sudo apt-get install mssql-tools unixodbc-dev -y
+        echo 'export PATH="$PATH:/opt/mssql-tools/bin"' >> ~/.bashrc
+        source ~/.bashrc
+
+    - name: Run SQL Script to Create AdventureWorksLT
+      env:
+        SQL_SERVER: "sql-srv-jerson-lab03.database.windows.net"  # Cambia si tu server tiene otro nombre
+        SQL_DATABASE: "adventureworkslt-db-jerson"
+        SQL_USER: "sqladmin"
+        SQL_PASSWORD: "P@ssw0rd1234!"
+      run: |
+        /opt/mssql-tools/bin/sqlcmd -S $SQL_SERVER -d $SQL_DATABASE -U $SQL_USER -P $SQL_PASSWORD -i bd.sql
