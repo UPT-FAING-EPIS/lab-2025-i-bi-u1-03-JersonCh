@@ -74,10 +74,7 @@ jobs:
           az sql db restore \
             --resource-group lab03-sql-rg-jerson \
             --server sql-srv-jerson-lab03 \
-            --destination-database adventureworkslt-db-jerson \
+            --name adventureworkslt-db-jerson \
+            --dest-name adventureworkslt-db-jerson \
             --backup-storage-redundancy LRS \
-            --name AdventureWorksLT2016 \
-            --source-database adventureworkslt-db-jerson \
-            --blob-url https://cuentaalmacenamiento3.blob.core.windows.net/backups/AdventureWorksLT2016.bak \
-            --dest-name adventureworkslt-db-jerson
-      
+            --storage-uri https://cuentaalmacenamiento3.blob.core.windows.net/backups/AdventureWorksLT2016.bak
