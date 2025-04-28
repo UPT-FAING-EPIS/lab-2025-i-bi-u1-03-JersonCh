@@ -59,16 +59,21 @@ jobs:
             --start-ip-address 0.0.0.0 \
             --end-ip-address 0.0.0.0
 
-      - name: Run SQL Script
+      - name: Restore Database from .bak
         run: |
-          docker run --rm -v $(pwd):/scripts \
-            mcr.microsoft.com/mssql-tools \
-            /opt/mssql-tools/bin/sqlcmd \
-            -S sql-srv-jerson-lab03.database.windows.net \
-            -U sqladmin \
-            -P "$SQLPASSWORD" \
-            -d adventureworkslt-db-jerson \
-            -i /scripts/bd.sql \
-            -b
-        env:
-          SQLPASSWORD: ${{ secrets.SQL_ADMIN_PASSWORD }}
+          # Subir el archivo .bak a un contenedor de Azure Blob Storage
+          az storage blob upload \
+            --account-name <storage-account-name> \
+            --container-name <container-name> \
+            --file AdventureWorksLT2016.bak \
+            --name AdventureWorksLT2016.bak
+
+          # Restaurar la base de datos desde el archivo .bak
+          az sql db restore \
+            --resource-group lab03-sql-rg-jerson \
+            --server sql-srv-jerson-lab03 \
+            --destination-database adventureworkslt-db-jerson \
+            --backup-storage-redundancy LRS \
+            --name AdventureWorksLT2016 \
+            --source-database adventureworkslt-db-jerson \
+            --blob-url https://<storage-account-name>.blob.core.windows.net/<container-name>/AdventureWorksLT2016.bak
